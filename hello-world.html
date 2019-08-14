@@ -1,0 +1,135 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./ext-3.3.0/resources/css/ext-all.css" />
+<script type="text/javascript" src="./ext-3.3.0/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="./ext-3.3.0/ext-all.js"></script>
+
+
+<script>
+Ext.onReady(function(){
+//     var boxCmp = new Ext.BoxComponent({
+// 	el: 'test',
+// 	style: 'background-color: red; position:absolute; ',
+// 	pageX: 100,
+// 	pageY: 50,
+// 	width: 200,
+// 	height: 150
+// });
+// boxCmp.render();
+
+// var cntr = new Ext.Container({
+// 	renderTo: 'test',
+// 	style: 'background-color: blue; position:absolute;',
+// 	pageX: 100,
+// 	pageY: 50,
+// 	width: 200,
+// 	height: 150
+// });
+
+// new Ext.Viewport({
+//     layout: 'border',
+//     items: [{
+//         region: 'north',
+//         html: '<h1 class="x-panel-header">Page Title</h1>',
+//         autoHeight: true,
+//         border: false,
+//         margins: '0 0 5 0'
+//     }, {
+//         region: 'west',
+//         collapsible: true,
+//         title: 'Navigation',
+//         width: 200
+//         // the west region might typically utilize a TreePanel or a Panel with Accordion layout
+//     }, {
+//         region: 'south',
+//         title: 'Title for Panel',
+//         collapsible: true,
+//         html: 'Information goes here',
+//         split: true,
+//         height: 100,
+//         minHeight: 100
+//     }, {
+//         region: 'east',
+//         title: 'Title for the Grid Panel',
+//         collapsible: true,
+//         split: true,
+//         width: 200,
+//         xtype: 'grid',
+//         // remaining grid configuration not shown ...
+//         // notice that the GridPanel is added directly as the region
+//         // it is not "overnested" inside another Panel
+//     }, {
+//         region: 'center',
+//         xtype: 'tabpanel', // TabPanel itself has no title
+//         items: {
+//             title: 'Default Tab',
+//             html: 'The first tab\'s content. Others may be added dynamically'
+//         }
+//     }]
+// });
+
+
+// var win = new Ext.Window({
+//     el:'window-win',
+//     html: 'hello Jasmine!',
+//     layout:'fit',
+//     width:500,
+//     height:300,
+//     closeAction:'hide',
+
+//     items: [{}],
+
+//     buttons: [{
+//         text:'hello'
+//     }]
+// });
+// win.show();
+
+// });
+
+    Person = Ext.extend(Ext.util.Observable, {
+        constructor: function (config) {
+            this.name = config.name;
+            this.addEvents('walk', 'eat', 'sleep');
+            Person.superclass.constructor.call(this, config);
+            console.log(config.name)
+        },
+        info: function (action) {
+            return this.name + ' is ' + action + 'ing';
+        }
+    });
+    var person = new Person({name: 'Jasmine'});
+    console.log(person);
+    person.on('walk', function() {
+        Ext.MessageBox.alert('event', person.name + "在走啊走啊。");
+    });
+    person.on('eat', function(breakfast, lunch, supper) {
+        Ext.Msg.alert('event', person.name + "要吃" + breakfast + "，" + lunch + "和" + supper + "。");
+    });
+    person.on('sleep', function(time) {
+        Ext.Msg.alert('event', person.name + "从" + time.format("H") + "点开始睡觉啦。");
+    });
+
+    Ext.get('walk').on('click', function() {
+        person.fireEvent('walk');
+    });
+
+    Ext.get('eat').on('click', function() {
+        person.fireEvent('eat', '早餐', '中餐', '晚餐');
+    });
+
+    Ext.get('sleep').on('click', function() {
+        person.fireEvent('sleep', new Date());
+    });
+
+    
+});
+</script>
+</head>
+<body>
+    <button id="walk">walk</button>
+    <button id="eat">eat</button>
+    <button id="sleep">sleep</button>
+</body>
+</html>
