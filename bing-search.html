@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./ext-3.3.0/resources/css/ext-all.css" />
+<script type="text/javascript" src="./ext-3.3.0/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="./ext-3.3.0/ext-all.js"></script>
+<style>  
+    body {
+        background-color: black;
+    }
+    #bing {
+        margin-top: 140px;
+    }
+</style>
+<script>
+    Ext.onReady(function() {
+        var container = new Ext.Container({
+            renderTo: 'bing',
+            layout: 'column',
+            items:[{
+                colspan: 3,
+                width: 500,
+                layout: 'hbox',
+                layoutConfig: {
+                    pack: 'center'
+                },
+                xtype: 'container',
+                items:[{
+                    xtype: 'box',
+                    height: 100,
+                    autoEl: {
+                        tag: 'img',
+                        src: 'bing.png'
+                    }
+                }]
+            },
+            {
+                xtype:'tabpanel',
+                id:'searchPanel',
+                style:'position:absolute;',
+                height: 50,
+                width:700,
+                activeTab:'domestic',
+                pageY:170,
+                pageX:500,
+                plain:true,
+                items:[{
+                    id:'domestic',
+                    title: '国内版',
+                    items:[{
+                        xtype:'trigger',
+                        triggerClass:'x-form-search-trigger',
+                        width:700
+                    }]
+                },
+                {
+                    id:'foreign',
+                    title: '国际版',
+                    items:[{
+                        xtype:'trigger',
+                        triggerClass:'x-form-search-trigger',
+                        width:700
+                    }]
+                }]
+            }]
+        })
+    });
+</script>
+</head>
+<body background="background.jpg">
+    <div id="bing"></div>
+</body>
+
+</html>
