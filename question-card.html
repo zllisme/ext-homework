@@ -1,0 +1,175 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./ext-3.3.0/resources/css/ext-all.css" />
+<script type="text/javascript" src="./ext-3.3.0/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="./ext-3.3.0/ext-all.js"></script>
+
+<script>
+Ext.onReady(function(){
+    var navHandler = function (direction) {
+        var wizard = Ext.getCmp('wizard').layout;
+        var prev = Ext.getCmp('move-prev');
+        var next = Ext.getCmp('move-next');
+        var activeId = wizard.activeItem.id;
+
+        if (activeId == 'card-0') {
+            if (direction == 1) {
+                var answer1 = Ext.getCmp('card-0').items.items.filter(item => item.checked);
+                Ext.getCmp('q1answer').setValue(answer1[0].boxLabel);
+                wizard.setActiveItem(1);
+                prev.setDisabled(false);
+            }
+        } else if (activeId == 'card-1') {
+            if (direction == -1) {
+                wizard.setActiveItem(0);
+                prev.setDisabled(true);
+            } else {
+                var answer2 = Ext.getCmp('card-1').items.items.filter(item => item.checked);
+                var answer2Text = '';
+                for(var i = 0; i < answer2.length; i++) {
+                    answer2Text += answer2[i].boxLabel + ';\n';
+                }
+                Ext.getCmp('q2answer').setValue(answer2Text);
+                wizard.setActiveItem(2);
+                next.setDisabled(true);
+            }
+        } else if (activeId == 'card-2') {
+            if (direction == -1) {
+                wizard.setActiveItem(1);
+                next.setDisabled(false);
+            }
+        }
+    };
+
+    var firstQuestion = new Ext.form.FieldSet({
+        id: 'card-0',
+        xtype: 'fieldset',
+        title: 'Q1: 番茄酱属于以下哪种垃圾？（单选）',
+        autoHeight: true,
+        defaultType: 'radio',
+        hideLabels: true,
+        items: [
+            { boxLabel: '湿垃圾', name: 'radio', inputValue: '1' },
+            { boxLabel: '干垃圾', name: 'radio', inputValue: '2' },
+            { boxLabel: '有害垃圾', name: 'radio', inputValue: '3' },
+            { boxLabel: '可回收物', name: 'radio', inputValue: '4' }
+        ]
+    });
+
+    var secondQuestion = new Ext.form.FieldSet({
+        id: 'card-1',
+        xtype: 'fieldset',
+        title: 'Q2: 王大叔出门遛狗后，哪些是正确处理狗粑粑的方法？（多选）',
+        autoHeight: true,
+        defaultType: 'checkbox',
+        hideLabels: true,
+        items: [
+            { boxLabel: '把粑粑用废报纸包好带回家冲掉', inputValue: '1' },
+            { boxLabel: '受污染的报纸按有害垃圾处理', inputValue: '2' },
+            { boxLabel: '没受污染的报纸按可回收垃圾处理', inputValue: '3' },
+            { boxLabel: '受污染的报纸浸水后当湿垃圾处理', inputValue: '4' }
+        ]
+    });
+
+    var formResult=new Ext.form.FormPanel({
+            id:'card-2',
+            frame: true,
+            items:[{
+                xtype:'fieldset',
+                title: 'answer1',
+                id:'Q1Field',
+                autoHeight: true,
+                hideLabels: true,
+                items: [
+                {
+                    id: 'q1answer',
+                    width: 150,
+                    xtype: 'textfield',
+                    readOnly: true
+                }
+                ]
+            },{
+                xtype:'fieldset',
+                hideLabels: true,
+                title:'answer2',
+                id:'Q2Field',
+                items: [
+                {
+                    id: 'q2answer',
+                    xtype: 'textarea',
+                    width: 200,
+                    height: 80,
+                    readOnly: true
+                }
+                ]
+            }],
+            buttons:[{
+                text: 'submit',
+                listeners:{
+                    'click': function(){
+                        Ext.Msg.alert('Tips!', 'Congratulation!')
+                    }}
+            }]
+    });
+
+    var viewport = new Ext.Viewport({
+        layout: 'border',
+        items: [{
+            region: 'center',
+            id: 'wizard',
+            title: '题目',
+            layout: 'card',
+            activeItem: 0,
+            bodyStyle: 'padding:15px',
+            defaults: {
+                border: false
+            },
+            bbar: [{
+                id: 'move-prev',
+                text: '上一步',
+                handler: navHandler.createDelegate(this, [-1]),
+                disabled: true
+            }, '->', {
+                id: 'move-next',
+                text: '下一步',
+                handler: navHandler.createDelegate(this, [1])
+            }],
+            items: [firstQuestion, secondQuestion, formResult]
+        }, 
+        {
+            region: 'west',
+            width: 800,
+            split: false,
+            border: false
+        },
+        {
+            region: 'east',
+            width: 800,
+            split: false,
+            border: false
+        },
+        {
+            region: 'north',
+            height: 200,
+            split: false,
+            border: false
+
+        },
+        {
+            region: 'south',
+            height: 300,
+            split: false,
+            border: false
+        }]
+    });
+
+
+});
+</script>
+</head>
+<body>
+    
+</body>
+
+</html>
