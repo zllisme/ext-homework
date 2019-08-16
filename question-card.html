@@ -27,9 +27,9 @@ Ext.onReady(function(){
             } else {
                 var answer2 = Ext.getCmp('card-1').items.items.filter(item => item.checked);
                 var answer2Text = '';
-                for(var i = 0; i < answer2.length; i++) {
-                    answer2Text += answer2[i].boxLabel + ';\n';
-                }
+                answer2.forEach(item => {
+                    answer2Text += item.boxLabel + ';\n';
+                });
                 Ext.getCmp('q2answer').setValue(answer2Text);
                 wizard.setActiveItem(2);
                 next.setDisabled(true);
