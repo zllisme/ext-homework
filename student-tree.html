@@ -1,0 +1,128 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./ext-3.3.0/resources/css/ext-all.css" />
+<script type="text/javascript" src="./ext-3.3.0/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="./ext-3.3.0/ext-all.js"></script>
+<style>
+.x-tree-node-icon {
+    display: none;
+}
+</style>
+
+<script>
+Ext.onReady(function(){
+
+    let menu = new Ext.menu.Menu({
+        items: [
+            {
+                id: 'deleteNode',
+                text: 'delete'
+            },
+            {
+                id: 'addNode',
+                text: 'add'
+            }
+        ],
+        listeners: {
+            itemclick: function(item) {
+                let nodeDataDel = item.parentMenu.contextNode.attributes;
+                let parentNodeData = item.parentMenu.contextNode.parentNode;
+                switch (item.id) {
+                    case 'deleteNode':
+                        var currentNode = item.parentMenu.contextNode;
+                        console.log(currentNode)
+                        if(currentNode.parentNode) {
+                            currentNode.remove();
+                        }
+                        break;
+                    case 'addNode': 
+                        var currentNode = item.parentMenu.contextNode;
+                        currentNode.appendChild(new Ext.tree.TreeNode({ text: 'new file' }));
+                }
+            }
+        }
+    });
+
+    var selectedNode = null;
+
+    let studentTree = new Ext.tree.TreePanel({
+        renderTo: 'tree',
+        enableDD: true,
+        width: 300,
+        height: 200,
+        contextMenu: menu,
+        root: new Ext.tree.AsyncTreeNode({text: 'ITA', expanded: true}),
+        loader: new Ext.tree.TreeLoader({
+            dataUrl: 'data.txt'
+        }),
+        listeners: {
+            contextmenu: function(node, event) {
+                var c = node.getOwnerTree().contextMenu;
+                c.contextNode = node;
+                c.showAt(event.getXY());
+            },
+            click: function(node, event) {
+                selectedNode = node
+            }
+        }
+    });
+
+
+    let treeEditor = new Ext.tree.TreeEditor(studentTree, { allowBlank: false }, {
+        listeners: {
+            'complete': function (editor, currValue, origValue) {
+                Ext.Msg.alert('tips', origValue + ' Has changed to ' + currValue)
+            }
+        }
+    });
+
+    var addForm = new Ext.FormPanel({
+        id: 'add-form',
+        renderTo: 'add-region',
+        labelWidth: 80,
+        frame: true,
+        title: 'please input class or student name to add',
+        bodyStyle: 'padding:5px 5px 0',
+        width: 300,
+        items: [{
+            id: 'new-name',
+            fieldLabel: ' Name',
+            xtype: 'textfield',
+            name: 'item',
+            msgTarget: 'side',
+            allowBlank: false
+        }],
+        buttons: [{
+            text: 'add',
+            type: 'submit',
+            handler: function () {
+                if (addForm.form.isValid()) {
+                    if(!selectedNode) {  
+                        Ext.Msg.alert(tips, 'please select a node to add');
+                        return;
+                    }
+                    var newTreeNode = new Ext.tree.TreeNode({ text: addForm.form.findField('item').getValue() });
+                    if(selectedNode.getDepth() === 2) {
+                        let parentNodeData = selectedNode.parentNode;
+                        parentNodeData.appendChild(newTreeNode);
+                        addForm.form.reset();
+                        return;
+                    }
+                    selectedNode.appendChild(newTreeNode);
+                    addForm.form.reset();
+                }
+            }
+        }]
+    });
+   
+});
+</script>
+</head>
+<body>
+    <div id='add-region'></div>
+    <div id='tree'></div>
+    
+</body>
+
+</html>
